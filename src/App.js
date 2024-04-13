@@ -1,25 +1,24 @@
-import logo from './logo.svg';
+import React from 'react';
+import { RouterProvider } from "react-router-dom";
+import { Provider } from 'react-redux';
+import { store } from './reduxStore/store.js';
+import router from './components/RoutePaths/Router';
 import './App.css';
+import './UI/general_css.css';
+import './UI/components_css.css';
 
-function App() {
+const App = () => {
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
+
     </div>
   );
+
 }
 
 export default App;
