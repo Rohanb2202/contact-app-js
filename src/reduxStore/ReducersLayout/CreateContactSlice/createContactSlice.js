@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { setCreateContactSync } from '../../ActionsLayout/actions.js';
 import * as storage from '../../../utility/LocalStorage/storage.js';
-import { successAlert } from '../../../utility/Alerts/ToasterTypes.js';
 import { keyRoutes } from '../../../components/RoutePaths/RouteConstant.js';
+import { successAlert } from '../../../utility/Alerts/ToasterTypes.js';
 const refreshPage = () => { window.location.reload(false); }
 
 const initialState = {
@@ -12,17 +13,18 @@ export const CreateContactSlice = createSlice({
     name: 'contacts',
     initialState,
     reducers: {
-        CreateContact: (state, action) => {
-            state.contacts.push(action.payload);
-            state.contacts.sort((a, b) => a.id - b.id); // Sorting by id
-            storage.set('contactListData', state.contacts);
-            successAlert("Contact created successfully");
-            window.history.pushState({}, 'ContactList', keyRoutes.CONTACT_LIST);
-            refreshPage();
+        setAddContactsSync: (state, action) => {
+            state.contacts = action.payload;
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(setCreateContactSync.fulfilled, (state, action) => {
+            window.history.pushState({}, 'ContactList', keyRoutes.CONTACT_LIST);
+            refreshPage();
+            successAlert("Contact created successfully");
+        });
+    }
 });
 
-export const { CreateContact } = CreateContactSlice.actions;
-
+export const { setAddContactsSync } = CreateContactSlice.actions;
 export default CreateContactSlice.reducer;

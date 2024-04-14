@@ -31,5 +31,4 @@ const contactListSlice = createSlice({
 })
 
 export const { getContactSlice } = contactListSlice.actions;
-
 export default contactListSlice.reducer;

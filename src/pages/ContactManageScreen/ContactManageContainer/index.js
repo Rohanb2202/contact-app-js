@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getContactList } from '../../../reduxStore/ActionsLayout/actions.js';
+import { useParams } from 'react-router-dom';
+import { getContactList, setCreateContactSync, setUpdateContactSync } from '../../../reduxStore/ActionsLayout/actions.js';
 import Spinner from '../../../utility/Spinners/spinner.js';
 import ContactManageForm from '../ContactManageForm';
-import { CreateContact } from '../../../reduxStore/ReducersLayout/CreateContactSlice/createContactSlice';
-import { UpdateContact } from '../../../reduxStore/ReducersLayout/UpdateContactSlice/UpdateContactSlice.js';
 
 const ContactManageContainer = () => {
 
@@ -38,10 +36,22 @@ const ContactManageContainer = () => {
 
         if (contactId) {
             const contactGenerator = { ...data, id: parseInt(contactId) }; // Generating new id
-            dispatch(UpdateContact(contactGenerator));
+            dispatch(setUpdateContactSync(contactGenerator));
         } else {
-            const contactGenerator = { ...data, id: fetchedContactListData?.contactListData?.length + 1 }; // Generating new id
-            dispatch(CreateContact(contactGenerator));
+            const contactGenerator = {
+                ...data, id: fetchedContactListData?.contactListData?.reduce((acc, curr, currIndex, array) => {
+                    let generateId = ''
+
+                    if (array.length + 1 == curr.id) {
+                        generateId = curr.id + 1;
+                        return generateId;
+                    } else {
+                        generateId = array.length + 1;
+                        return generateId;
+                    }
+                }, [])
+            }; // Generating new id
+            dispatch(setCreateContactSync(contactGenerator));
         }
 
     };
